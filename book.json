@@ -1,0 +1,11 @@
+{
+    "title": "Clang Tools入门教程",
+    "author": "hokein",
+    "keywords": "clang,llvm,productivity",
+    "plugins": ["-search"],
+    "links": {
+      "sidebar": {
+        "\u27AD GitHub": "https://github.com/hokein/clang-tools-tutorial"
+      }
+    }
+}
