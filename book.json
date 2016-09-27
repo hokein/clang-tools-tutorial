@@ -2,7 +2,12 @@
     "title": "Clang Tools入门教程",
     "author": "hokein",
     "keywords": "clang,llvm,productivity",
-    "plugins": ["-search"],
+    "plugins": ["-search", "ga"],
+    "pluginsConfig": {
+    	"ga": {
+    			"token": "UA-34500353-2"
+    	}
+    },
     "links": {
       "sidebar": {
         "\u27AD GitHub": "https://github.com/hokein/clang-tools-tutorial"
