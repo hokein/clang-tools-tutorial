@@ -1,0 +1,246 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>FileCheck介绍 · Clang Tools入门教程</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="author" content="hokein">
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="clang-tidy.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+    
+        
+        <li>
+            <a href="https://github.com/hokein/clang-tools-tutorial" target="_blank" class="custom-link">➭ GitHub</a>
+        </li>
+    
+    
+
+    
+    <li class="divider"></li>
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="clang-tidy.html">
+            
+                <a href="clang-tidy.html">
+            
+                    
+                    clang-tidy——静态代码分析框架
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="FileCheck.html">
+            
+                <a href="FileCheck.html">
+            
+                    
+                    FileCheck介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >FileCheck介绍</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="filecheck">FileCheck</h1><p><code>FileCheck</code>&#x5728;LLVM/Clang/Clang Tools&#x7684;lint&#x6D4B;&#x8BD5;&#x91CC;&#x4E0D;&#x53EF;&#x6216;&#x7F3A;&#x7684;&#x4E00;&#x4E2A;&#x5DE5;&#x5177;&#xFF0C;&#x5B83;&#x662F;LLVM&#x4ED3;&#x5E93;&#x91CC;&#x7684;&#x4E00;&#x4E2A;&#x547D;&#x4EE4;&#x884C;&#x5DE5;&#x5177;&#xFF0C;&#x901A;&#x5E38;&#x7528;&#x4E8E;&#x68C0;&#x67E5;Clang&#x7F16;&#x8BD1;&#x5668;&#x7684;&#x8F93;&#x51FA;&#x7ED3;&#x679C;(&#x7F16;&#x8BD1;&#x751F;&#x6210;&#x7684;&#x8B66;&#x544A;&#xFF0C;&#x7F16;&#x8BD1;&#x540E;&#x7684;&#x4EE3;&#x7801;&#xFF0C;&#x8F93;&#x51FA;&#x7684;&#x9519;&#x8BEF;&#x4FE1;&#x606F;)&#x662F;&#x5426;&#x7B26;&#x5408;&#x9884;&#x671F;&#x7684;&#x7ED3;&#x679C;&#x3002;</p><p>&#x4E0B;&#x9762;&#x662F;&#x4E00;&#x4E2A;ClangTidy&#x7684;lint test&#x4F8B;&#x5B50;&#xFF0C;&#x7528;FileCheck&#x68C0;&#x67E5;&#x6BCF;&#x4E2A;check&#x7684;&#x8F93;&#x51FA;&#x6D88;&#x606F;&#x662F;&#x5426;&#x4E0E;&#x9884;&#x671F;&#x7684;&#x4E00;&#x81F4;&#x3002;&#x7B2C;&#x4E00;&#x884C;<code>// RUN:</code>&#x662F;&#x544A;&#x8BC9;lint&#xFF0C;&#x8BF4;&#x8981;&#x6267;&#x884C;&#x8FD9;&#x4E2A;&#x547D;&#x4EE4;&#xFF08;&#x8C03;&#x7528;<code>clang-tidy</code>&#xFF0C;&#x5E76;&#x628A;&#x5B83;&#x7684;&#x7ED3;&#x679C;&#x4EE5;&#x7BA1;&#x9053;&#x5F62;&#x5F0F;&#x4F20;&#x9012;&#x7ED9;<code>FileCheck</code>&#x68C0;&#x6D4B;&#xFF09;</p><pre><code class="lang-cpp"><span class="hljs-comment">// RUN: clang-tidy -checks=&quot;-*,llvm-namespace-comment&quot; %s %t.cpp -- | FileCheck %s</span>
+<span class="hljs-keyword">namespace</span> i {
+}
+<span class="hljs-comment">// CHECK: warning: namespace &apos;i&apos; not terminated with a closing comment [llvm-namespace-comment]</span></code></pre>
+<p><code>FileCheck</code>&#x63A5;&#x53D7;&#x4E00;&#x4E2A;&#x8F93;&#x5165;&#x6587;&#x4EF6;<code>actual_result</code>&#x548C;&#x9884;&#x671F;&#x7684;&#x7ED3;&#x679C;<code>expected_result</code>&#xFF0C;&#x5224;&#x65AD;&#x4E24;&#x8005;&#x662F;&#x5426;&#x4E00;&#x81F4;&#x3002;&#x5982;&#x679C;&#x4E24;&#x8005;&#x4E00;&#x81F4;&#xFF0C;&#x8FD4;&#x56DE;0&#xFF1B;&#x5426;&#x5219;&#x8FD4;&#x56DE;&#x975E;0&#xFF1B;&#x5728;LLVm&#x7684;lint&#x6D4B;&#x8BD5;&#x91CC;&#xFF0C;&#x5982;&#x679C;&#x4EFB;&#x4F55;&#x4E00;&#x4E2A;&#x6B65;&#x9AA4;&#x8FD4;&#x56DE;&#x975E;0&#x7ED3;&#x679C;&#xFF0C;&#x5C31;&#x4F1A;&#x88AB;&#x8BA4;&#x4E3A;&#x8FD9;&#x6B65;&#x9AA4;&#x6CA1;&#x6709;&#x6267;&#x884C;&#x6B63;&#x786E;&#xFF0C;&#x8FD9;&#x4E2A;&#x6D4B;&#x8BD5;&#x5C31;&#x6CA1;&#x6709;&#x901A;&#x8FC7;&#x3002;</p><p>&#x901A;&#x5E38;<code>expected_result</code>&#x6587;&#x4EF6;&#x80FD;&#x5305;&#x542B;&#x4E0D;&#x540C;&#x7684;<code>CHECK</code> pattern&#xFF0C;&#x7528;&#x4E8E;&#x7ED9;<code>FileCheck</code>&#x68C0;&#x6D4B;&#x3002;&#x8FD9;&#x4E9B;pattern&#x662F;pattern&#x7684;&#x540D;&#x5B57;&#xFF0C;&#x540E;&#x9762;&#x518D;&#x8DDF;&#x7740;&#x5BF9;&#x6BD4;&#x7684;&#x5185;&#x5BB9;&#xFF0C;&#x7C7B;&#x4F3C;<code>// CHECK: &lt;check content&gt;</code>&#x3002;<code>FileCheck</code>&#x63D0;&#x4F9B;&#x6709;<code>-check-prefix=&lt;check_name&gt;</code>&#x7684;&#x9009;&#x9879;&#xFF0C;&#x7528;&#x4E8E;&#x5BF9;&#x6BD4;&#x6307;&#x5B9A;&#x7684;<code>CHECK</code> pattern&#x5185;&#x5BB9;&#x3002;</p><p>&#x4E0B;&#x9762;&#x4E00;&#x4E2A;<code>expected_result</code>&#x7684;&#x4F8B;&#x5B50;&#xFF1A;</p><pre><code class="lang-cpp"><span class="hljs-comment">// CHECK: this should be warned.</span>
+<span class="hljs-comment">// CHECK: this should be warned too.</span></code></pre>
+<p>FileCheck&#x57FA;&#x672C;&#x7528;&#x6CD5;&#xFF1A;</p><pre><code class="lang-cpp"><span class="hljs-comment">// &#x68C0;&#x6D4B;clang_result&#x548C;expected_result&#x91CC;&#x7684;`CHECK::` pattern&#x662F;&#x5426;&#x4E00;&#x81F4;.</span>
+<span class="hljs-comment">// &#x8FD9;&#x91CC;&#x53EF;&#x4EE5;&#x4E0D;&#x663E;&#x5F0F;&#x6307;&#x5B9A;`-check-prefix`, &#x9ED8;&#x8BA4;&#x662F;&#x68C0;&#x6D4B;&#x540D;&#x5B57;`CHECK`&#x7684;pattern&#x3002;</span>
+FileCheck -input-file=clang_result.txt -check-prefix=CHECK expected_result.txt
+
+<span class="hljs-comment">// &#x5982;&#x679C;&#x6307;&#x5B9A;`-input-file`&#xFF0C;FileCheck&#x4F1A;&#x4ECE;&#x6807;&#x51C6;&#x8F93;&#x5165;&#x4E2D;&#x8BFB;&#x5165;</span>
+clang -Wunused warnings.cpp | FileCheck -check-prefix=CHECK-WARNINGS
+expected_result.txt</code></pre>
+<p><code>Check</code> pattern&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;&#x6765;&#x5339;&#x914D;&#x5185;&#x5BB9;&#xFF0C;&#x9700;&#x8981;&#x4F7F;&#x7528;<code>{{ }}</code>&#x628A;&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;&#x5305;&#x8D77;&#x6765;&#xFF0C;&#x50CF;<code>{{regex_exp}}</code>&#x3002;&#x4F46;&#x5927;&#x90E8;&#x5206;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x56FA;&#x5B9A;&#x7684;&#x5B57;&#x7B26;&#x4E32;&#x4E5F;&#x8DB3;&#x591F;&#x7528;&#x4E86;&#x3002;</p><p>FileCheck&#x662F;&#x57FA;&#x4E8E;&#x884C;&#x5BF9;&#x6BD4;&#x7684;&#xFF0C;<code>// CHECK:</code>&#x662F;&#x5BF9;&#x6BD4;&#x4E00;&#x884C;&#x5185;&#x5BB9;&#x7684;&#x3002;&#x5F53;&#x4F60;&#x9700;&#x8981;&#x68C0;&#x67E5;&#x8FDE;&#x7EED;&#x591A;&#x884C;&#x662F;&#x5426;&#x4E00;&#x81F4;&#xFF0C;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;<code>// CHECK-NEXT</code>&#x3002;&#x5982;&#x679C;&#x4F60;&#x7684;Check pattern&#x662F;&#x81EA;&#x5B9A;&#x4E49;&#x7684;&#xFF0C;&#x90A3;&#x4F7F;&#x7528;<code>// &lt;your-check-name&gt;-NEXT:</code>&#xFF1A;</p><pre><code class="lang-cpp"><span class="hljs-comment">// CHECK: warning1;</span>
+<span class="hljs-comment">// CHECK-NEXT: warning2;</span>
+<span class="hljs-comment">// CHECK-NEXT: warning3;</span></code></pre>
+<p>&#x53E6;&#x5916;&#xFF0C;&#x5982;&#x679C;&#x60F3;&#x4EC5;&#x4EC5;&#x5339;&#x914D;&#x6362;&#x884C;<code>\n</code>&#xFF0C;&#x53EF;&#x662F;&#x4F7F;&#x7528;&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;<code>{{[:space:]}}</code>:</p><pre><code class="lang-cpp"><span class="hljs-comment">// CHECK: [start warnings</span>
+<span class="hljs-comment">// CHECK-NEXT: {{:space:}}</span>
+<span class="hljs-comment">// CHECK: end warnings.]</span></code></pre>
+<p>&#x66F4;&#x8BE6;&#x7EC6;&#x7684;&#x6587;&#x6863;&#xFF0C;&#x8BF7;&#x67E5;&#x770B;LLVM&#x7684;<a href="http://llvm.org/docs/CommandGuide/FileCheck.html" target="_blank">&#x5B98;&#x65B9;&#x6587;&#x6863;</a>&#x3002;</p>
+                                
+                                </section>
+                            
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="clang-tidy.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: clang-tidy——静态代码分析框架">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"FileCheck介绍","level":"1.3","depth":1,"previous":{"title":"clang-tidy——静态代码分析框架","level":"1.2","depth":1,"path":"clang-tidy.md","ref":"clang-tidy.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-search","ga"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"ga":{"configuration":"auto","token":"UA-34500353-2"},"highlight":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","keywords":"clang,llvm,productivity","author":"hokein","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Clang Tools入门教程","links":{"sidebar":{"➭ GitHub":"https://github.com/hokein/clang-tools-tutorial"}},"gitbook":"*"},"file":{"path":"FileCheck.md","mtime":"2016-10-09T09:36:21.000Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-10-09T09:40:08.849Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
