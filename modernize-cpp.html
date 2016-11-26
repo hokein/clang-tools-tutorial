@@ -1,0 +1,297 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>自动现代化C++代码 · Clang Tools入门教程</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="author" content="hokein">
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="FileCheck.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+    
+        
+        <li>
+            <a href="https://github.com/hokein/clang-tools-tutorial" target="_blank" class="custom-link">➭ GitHub</a>
+        </li>
+    
+    
+
+    
+    <li class="divider"></li>
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="clang-tidy.html">
+            
+                <a href="clang-tidy.html">
+            
+                    
+                    clang-tidy——静态代码分析框架
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="FileCheck.html">
+            
+                <a href="FileCheck.html">
+            
+                    
+                    FileCheck介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4" data-path="modernize-cpp.html">
+            
+                <a href="modernize-cpp.html">
+            
+                    
+                    自动现代化C++代码
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >自动现代化C++代码</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x81EA;&#x52A8;&#x73B0;&#x4EE3;&#x5316;c&#x4EE3;&#x7801;">&#x81EA;&#x52A8;&#x73B0;&#x4EE3;&#x5316;C++&#x4EE3;&#x7801;</h1><p>&#x867D;&#x7136;C++11&#x6807;&#x51C6;&#x51FA;&#x6765;&#x5DF2;&#x7ECF;&#x6709;&#x597D;&#x4E9B;&#x5E74;&#x4E86;&#xFF0C;&#x4F46;&#x662F;&#x7531;&#x4E8E;&#x5386;&#x53F2;&#x7684;&#x539F;&#x56E0;&#xFF0C;&#x73B0;&#x5728;&#x5927;&#x90E8;&#x5206;C++&#x9879;&#x76EE;&#x4ECD;&#x7136;&#x662F;C++03&#x7684;&#x8BED;&#x6CD5;&#x3002;&#x90A3;&#x4E48;&#x6709;&#x6CA1;&#x65B9;&#x6CD5;&#x80FD;&#x591F;<strong>&#x81EA;&#x52A8;&#x5730;</strong>&#x628A;&#x8001;&#x7684;C++03&#x4EE3;&#x7801;&#x66FF;&#x6362;&#x6210;C++11&#x4EE3;&#x7801;&#xFF1F;&#x4ECE;&#x800C;&#x8BA9;&#x6211;&#x4EEC;&#x4EAB;&#x53D7;&#x5230;C++11&#x65B0;&#x7279;&#x6027;&#xFF0C;&#x50CF;for-range loop&#xFF0C;auto&#xFF0C;nullptr&#xFF0C;override&#x7B49;&#x3002;</p><p>&#x7B54;&#x6848;&#x5F53;&#x7136;&#x6709;&#x7684;&#x2014;&#x2014;<a href="http://hokein.me/clang-tools-tutorial/clang-tidy.html" target="_blank">clang-tidy</a>&#x3002;clang-tidy&#x63D0;&#x4F9B;&#x4E00;&#x7CFB;&#x5217;&#x7684;<code>modernize-*</code>checks&#x3002;&#x8FD9;&#x4E9B;checks&#x5C31;&#x662F;&#x7528;C++11&#x6539;&#x5199;C++03&#x3002;&#x5177;&#x4F53;&#x6709;&#x4E0B;&#x9762;&#x8FD9;&#x4E9B;&#xFF1A;</p><ul><li>modernize-avoid-bind: &#x4F7F;&#x7528;<code>lambda</code>&#x66FF;&#x6362;<code>std::binding</code>&#x3002;
+</li>
+<li>modernize-deprecated-headers: &#x5C06;C&#x6807;&#x51C6;&#x5E93;&#x7684;&#x5934;&#x6587;&#x4EF6;include&#x66FF;&#x6362;&#x6210;C++style&#xFF0C;<code>#include &lt;assert.h&gt;</code> =&gt; <code>#include &lt;cassert&gt;</code>&#x3002;
+</li>
+<li>modernize-loop-convert: &#x4F7F;&#x7528;<code>for-range loop</code>&#x66FF;&#x6362;<code>for(...;...;...;)</code>, &#x5E76;&#x66F4;&#x65B0;<code>for</code>&#x8BED;&#x53E5;&#x7684;&#x76F8;&#x5173;&#x53D8;&#x91CF;&#x3002;
+</li>
+<li>modernize-make-shared: &#x627E;&#x51FA;&#x6240;&#x6709;&#x663E;&#x5F0F;&#x521B;&#x5EFA;<code>std::shared_ptr</code>&#x53D8;&#x91CF;&#x7684;&#x8868;&#x8FBE;&#x5F0F;&#xFF0C;&#x5E76;&#x4F7F;&#x7528;<code>make_shared</code>&#x66FF;&#x6362;&#x3002;
+</li>
+<li>modernize-make-unique: &#x8DDF;<code>make-shared</code>&#x4E00;&#x6837;&#xFF0C;&#x4F7F;&#x7528;<code>std::make_unique</code>&#x66FF;&#x6362;&#x6240;&#x6709;<code>std::unique_ptr</code>&#x663E;&#x5F0F;&#x521B;&#x5EFA;&#x8868;&#x8FBE;&#x5F0F;&#x3002;
+</li>
+<li>modernize-pass-by-value: &#x5728;&#x6784;&#x9020;&#x51FD;&#x6570;&#x4E2D;&#x4F7F;&#x7528;move&#x8BED;&#x4E49;
+</li>
+<li>modernize-raw-string-literal: &#x7528;C++11&#x7684;<code>raw string literal</code>(<code>R&quot;...&quot;</code>)&#x66FF;&#x6362;&#x539F;&#x6765;&#x7684;<code>string literal</code>, &#x8FD9;&#x6837;&#x7684;&#x597D;&#x5904;&#x5C31;&#x662F;&#x4E0D;&#x7528;&#x518D;&#x6DFB;&#x52A0;&#x8F6C;&#x4E49;&#x7B26;<code>\</code>&#x4E86;&#x3002;
+</li>
+<li>modernize-redundant-void-arg: &#x53BB;&#x6389;<code>void</code>&#x51FD;&#x6570;&#x53C2;&#x6570;&#x3002;
+</li>
+<li>modernize-replace-auto-ptr: &#x7528;<code>std::unique_ptr</code>&#x66FF;&#x6362;<code>std::shared_ptr</code>, <code>std::shared_ptr</code>&#x662F;&#x4E0D;&#x63A8;&#x8350;&#x4F7F;&#x7528;&#x7684;&#xFF0C;&#x5373;&#x4F7F;&#x5728;C++98&#x3002;
+</li>
+<li>modernize-shrink-to-fit: &#x5728;C++03&#x4E2D;&#xFF0C;&#x5982;&#x679C;&#x6211;&#x4EEC;&#x60F3;&#x4FEE;&#x6539;STL&#x5BB9;&#x5668;&#x7684;<code>capacity</code>&#xFF0C;&#x53EA;&#x80FD;&#x901A;&#x8FC7;<code>copy &amp; swap</code>&#x7684;&#x65B9;&#x5F0F;&#xFF0C;C++11&#x63D0;&#x4F9B;&#x4E86;<code>shink_to_fit</code>&#x7684;&#x65B9;&#x6CD5;&#x3002;
+</li>
+<li>modernize-use-auto: &#x5728;&#x53D8;&#x91CF;&#x5B9A;&#x4E49;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4F7F;&#x7528;<code>auto</code>&#x4EE3;&#x66FF;&#x663E;&#x5F0F;&#x7684;&#x7C7B;&#x578B;&#x58F0;&#x660E;&#xFF0C;&#x8FD9;&#x4E2A;&#x5728;&#x5B9A;&#x4E49;STL&#x5BB9;&#x5668;&#x7C7B;&#x7684;<code>Iterator</code>&#x7279;&#x522B;&#x65B9;&#x4FBF;&#x3002;
+</li>
+<li>modernize-use-bool-literals: &#x627E;&#x51FA;&#x6240;&#x6709;&#x9690;&#x5F0F;&#x4ECE;<code>int</code>&#x8F6C;&#x6210;<code>bool</code>&#x7684;<code>literal</code>, &#x4F7F;&#x7528;<code>true</code>&#x6216;&#x8005;<code>false</code>&#x4EE3;&#x66FF;&#x3002;
+</li>
+<li>modernize-use-default: &#x5BF9;&#x4E8E;&#x6CA1;&#x6709;&#x4EFB;&#x4F55;&#x81EA;&#x5B9A;&#x4E49;&#x884C;&#x4E3A;(&#x5B9A;&#x4E49;&#x4E3A;<code>{}</code>)&#x7684;&#x7279;&#x6B8A;&#x7684;&#x6210;&#x5458;&#x51FD;&#x6570;&#xFF0C;&#x6784;&#x9020;&#x51FD;&#x6570;&#xFF0C;&#x6790;&#x6784;&#x51FD;&#x6570;&#xFF0C;&#x79FB;&#x52A8;/&#x590D;&#x5236;&#x6784;&#x9020;&#x51FD;&#x6570;&#xFF0C;&#x7528;<code>=default</code>&#x4EE3;&#x66FF;&#x6389;<code>{}</code>&#x3002;
+</li>
+<li>modernize-use-emplace: &#x4F7F;&#x7528;STL&#x5BB9;&#x5668;&#x4E2D;&#x7684;<code>emplace</code>&#x4EE3;&#x66FF;<code>push_back</code>&#x3002;
+</li>
+<li>modernize-use-equals-delete: &#x5728;C++98&#x4E2D;&#xFF0C;&#x7C7B;&#x8BBE;&#x8BA1;&#x4E3A;&#x4E86;&#x5B9E;&#x73B0;&#x7981;&#x6B62;&#x8C03;&#x7528;&#x67D0;&#x4E9B;&#x7279;&#x6B8A;&#x7684;&#x6210;&#x5458;&#x51FD;&#x6570;&#xFF0C;&#x901A;&#x5E38;&#x628A;&#x5B83;&#x4EEC;&#x58F0;&#x660E;&#x6210;<code>private</code>&#xFF1B;&#x5728;C++11&#x4E2D;&#xFF0C;&#x53EA;&#x9700;&#x8981;&#x5728;&#x58F0;&#x660E;&#x4E2D;&#x4F53;&#x68C0;<code>=delete</code>&#xFF0C;&#x627E;&#x51FA;&#x6240;&#x6709;<code>private</code>&#x7684;&#x7279;&#x6B8A;&#x6210;&#x5458;&#x51FD;&#x6570;&#xFF0C;&#x5E76;&#x5C06;&#x5B83;&#x4EEC;&#x6807;&#x8BB0;&#x6210;<code>=delete</code>&#x3002;
+</li>
+<li>modernize-use-nullptr: &#x7528;<code>nullptr</code>&#x4EE3;&#x66FF;<code>NULL</code>&#x3002;
+</li>
+<li>modernize-use-override: &#x5BF9;&#x4E8E;&#x5B50;&#x7C7B;&#x6539;&#x5199;&#x7236;&#x7C7B;&#x7684;<code>virtual</code>&#x65B9;&#x6CD5;&#xFF0C;&#x5728;&#x65B9;&#x6CD5;&#x540E;&#x9762;&#x6DFB;&#x52A0;<code>override</code>, &#x5E76;&#x5220;&#x6389;<code>virtual</code>&#x524D;&#x7F00;&#xFF0C;&#x5373;<code>virtual void NewOveride()</code> =&gt; <code>void NewOverride() override {}</code>&#x3002;
+</li>
+<li>modernize-use-using: &#x7528;<code>using</code>&#x4EE3;&#x66FF;<code>typedef</code>, &#x5982;<code>typedef int V</code> =&gt; <code>using V = int</code>&#x3002;
+</li></ul>
+<h2 id="&#x5982;&#x4F55;&#x5E94;&#x7528;&#x5230;&#x9879;&#x76EE;&#x4E2D;">&#x5982;&#x4F55;&#x5E94;&#x7528;&#x5230;&#x9879;&#x76EE;&#x4E2D;</h2><p>&#x8FD9;&#x91CC;&#x5C06;&#x4EE5;GitHub&#x7684;<a href="https://github.com/electron/electron" target="_blank">electron</a>&#x5F00;&#x6E90;&#x9879;&#x76EE;&#x4E3A;&#x4F8B;&#x5B50;&#xFF0C;&#x5982;&#x4F55;&#x5E94;&#x7528;clang-tidy&#x6765;&#x6539;&#x5199;&#x5B83;&#x7684;C++03&#x4EE3;&#x7801;&#xFF1A;</p><ul><li>&#x4F60;&#x9700;&#x8981;&#x5BFC;&#x51FA;&#x9879;&#x76EE;&#x7684;<a href="http://clang.llvm.org/docs/JSONCompilationDatabase.html" target="_blank"><code>compilation database</code></a>, &#x901A;&#x5E38;&#x547D;&#x540D;&#x4E3A;<code>compile_commands.json</code>, &#x56E0;&#x4E3A;clang-tidy&#x4F5C;&#x4E3A;&#x4E00;&#x4E2A;clang-based&#x5DE5;&#x5177;&#xFF0C;&#x9700;&#x8981;&#x77E5;&#x9053;&#x5982;&#x4F55;&#x7F16;&#x8BD1;&#x6BCF;&#x4E00;&#x4E2A;&#x6E90;&#x6587;&#x4EF6;&#xFF08;&#x4ECE;<code>compile_commands.json</code>&#x67E5;&#x627E;&#xFF09;. <a href="https://ninja-build.org/" target="_blank"><code>ninja</code></a>&#x63D0;&#x4F9B;&#x8FD9;&#x4E2A;&#x5BFC;&#x51FA;&#x529F;&#x80FD;&#xFF0C;&#x53EA;&#x9700;&#x8981;&#x7B80;&#x5355;&#x6267;&#x884C;&#x4E0B;&#x9762;&#x547D;&#x4EE4;&#x3002;&#x5BF9;&#x4E8E;&#x5176;&#x5B83;&#x4E0D;&#x7528;<code>ninja</code>&#x7F16;&#x8BD1;&#x7684;&#x9879;&#x76EE;&#xFF0C;&#x4E5F;&#x662F;&#x6709;&#x5DE5;&#x5177;&#x5BFC;&#x51FA;&#x7684;&#xFF0C;&#x65B9;&#x6CD5;&#x8BF7;&#x67E5;&#x770B;&#x524D;&#x4E00;&#x7BC7;<a href="http://hokein.me/clang-tools-tutorial/clang-tidy.html" target="_blank">&#x4ECB;&#x7ECD;clang-tidy&#x6587;&#x7AE0;</a>&#x3002;
+</li></ul>
+<pre><code class="lang-shell">cd path/to/electron
+# Make sure you can build electron successfully.
+./script/build.py -c D
+# Dump compilation database.
+ninja -C out/D -t compdb cc cxx &gt; compile_commands.json</code></pre>
+<ul><li>&#x73B0;&#x5728;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x5C1D;&#x8BD5;&#x5BF9;&#x9879;&#x76EE;&#x4E2D;&#x67D0;&#x4E2A;&#x6587;&#x4EF6;&#x8FD0;&#x884C;<code>modernize-use-nullptr</code> check, &#x6211;&#x4EEC;&#x9700;&#x8981;&#x6DFB;&#x52A0;<code>-fix</code>&#x7684;&#x547D;&#x4EE4;&#x53C2;&#x6570;&#xFF0C;clang-tidy&#x624D;&#x4F1A;&#x6267;&#x884C;&#x5BF9;&#x539F;&#x6587;&#x4EF6;&#x4FEE;&#x6539;, &#x4E0D;&#x7136;&#x7ED3;&#x679C;&#x4F1A;&#x5B9A;&#x5411;&#x5230;&#x6807;&#x51C6;&#x8F93;&#x51FA;<code>stdout</code>&#x3002;
+</li></ul>
+<pre><code class="lang-shell"># Diagnose any `NULL` usage.
+clang-tidy -checks=&quot;-*,modernize-use-nullptr&quot; atom/browser/api/atom_api_menu.cc
+# Replace all NULL usages to C++11 nullptr.
+clang-tidy -checks=&quot;-*,modernize-use-nullptr&quot; -fix atom/browser/api/atom_api_menu.cc</code></pre>
+<ul><li>&#x6211;&#x4EEC;&#x5F53;&#x7136;&#x4E0D;&#x9700;&#x8981;&#x6BCF;&#x6B21;&#x90FD;&#x624B;&#x52A8;&#x6267;&#x884C;&#x4E00;&#x4E2A;&#x6E90;&#x6587;&#x4EF6;&#xFF0C;<code>run_clang_tidy.py</code>&#x811A;&#x672C;&#x80FD;&#x591F;&#x5BF9;&#x6BCF;&#x4E2A;<code>compilation database</code>&#x4E2D;&#x7684;&#x6BCF;&#x4E2A;&#x6587;&#x4EF6;&#x90FD;&#x8FD0;&#x884C;<code>clang-tidy</code>&#xFF08;&#x4F7F;&#x7528;&#x591A;&#x8FDB;&#x7A0B;&#x65B9;&#x6CD5;&#xFF09;&#x3002;
+</li></ul>
+<pre><code class="lang-shell"># Run `modernize-use-auto` on all files in atom/* and apply fixes.
+path/to/run_clang_tidy.py -checks=&quot;-*,modernize-use-auto&quot; -fix atom/*</code></pre>
+<p>&#x771F;&#x5B9E;&#x8FD0;&#x884C;&#x7684;&#x7ED3;&#x679C;&#xFF0C;&#x8BF7;&#x67E5;&#x770B;<a href="https://github.com/electron/electron/pull/6423/files" target="_blank">electron#6423</a>&#xFF0C;&#x5DF2;&#x7ECF;&#x88AB;merge&#x8FDB;upstream&#x4E86;&#x3002;</p>
+                                
+                                </section>
+                            
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="FileCheck.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: FileCheck介绍">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"自动现代化C++代码","level":"1.4","depth":1,"previous":{"title":"FileCheck介绍","level":"1.3","depth":1,"path":"FileCheck.md","ref":"FileCheck.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-search","ga","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"ga":{"configuration":"auto","token":"UA-34500353-2"},"livereload":{},"highlight":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","keywords":"clang,llvm,productivity","author":"hokein","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Clang Tools入门教程","links":{"sidebar":{"➭ GitHub":"https://github.com/hokein/clang-tools-tutorial"}},"gitbook":"*"},"file":{"path":"modernize-cpp.md","mtime":"2016-11-26T10:29:44.000Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-11-26T10:12:04.801Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
