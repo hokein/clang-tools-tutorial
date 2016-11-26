@@ -8,8 +8,8 @@
 
 * [x] clang-tidy——静态代码分析框架
 * [x] FileCheck介绍
+* [x] 自动现代化C++代码
 * [ ] clang-tidy check 101教程
-* [ ] Modernize cpp code
 * [ ] 基于libtooling编写一个Clang tool
 * [ ] clang-include-fixer
 * [ ] clang-format
